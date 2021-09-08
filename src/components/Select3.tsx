@@ -1,4 +1,4 @@
-import {FC, useState, useEffect} from "react";
+import {FC, useState} from "react";
 import styled from "styled-components";
 import {Select} from "./Select";
 
@@ -33,7 +33,7 @@ export const Select3: FC<SelectProps> = ({value}: SelectProps) => {
     }
 
     const onChange = async (value: number, level: number) => {
-        let valArr = val;
+        let valArr = [0,0,0];
         // If building is changed, clear room info and update level info
         if (level === 0){
             valArr = [value,0,0];
@@ -45,10 +45,10 @@ export const Select3: FC<SelectProps> = ({value}: SelectProps) => {
             valArr = [val[0],value,0];
             setRoomArr(getData(5))
         }
-        valArr[level] = value;
-        console.log('update:',valArr)
+        if (level === 2){
+            valArr = [val[0],val[1],value];
+        }
         await setVal(valArr)
-        console.log('update1:',val)
     }
 
     return (

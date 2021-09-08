@@ -14,13 +14,13 @@ export interface SelectProps {
 }
 
 export const Select: FC<SelectProps> = ({data, value, placeholder, onChange}: SelectProps) => {
-    const [val, setVal] = useState(0);
+    const [val, setVal] = useState(value);
 
     useEffect(() => {
-        return () => {
-            console.log(value)
-        };
-    }, [value]);
+        if (value !== val){
+            setVal(value??0);
+        }
+    },[value]);
 
 
     const onClick = (value: number) => {
