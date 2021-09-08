@@ -11,9 +11,10 @@ export interface SelectProps {
     value?: number;
     placeholder?: string;
     onChange?: (value:number)=>any;
+    onSearch?: (value:string)=>any;
 }
 
-export const Select: FC<SelectProps> = ({data, value, placeholder, onChange}: SelectProps) => {
+export const Select: FC<SelectProps> = ({data, value, placeholder, onChange, onSearch}: SelectProps) => {
     const [val, setVal] = useState(value);
 
     useEffect(() => {
@@ -28,9 +29,14 @@ export const Select: FC<SelectProps> = ({data, value, placeholder, onChange}: Se
         onChange && onChange(value);
     }
 
+    const search = (value:string) => {
+        console.log(value)
+        onSearch && onSearch(value);
+    }
+
     return (
         <Container>
-            <div><input className={'search'} placeholder={placeholder}/></div>
+            <div><input className={'search'} placeholder={placeholder} onChange={(e)=>{search(e.target.value)}}/></div>
             {
                 (data && data.length > 0) && data.map((item, index) => {
                     return <div className={val === item.value ? 'selected' : ''} key={index} onClick={() => {

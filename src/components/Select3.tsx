@@ -20,7 +20,7 @@ export const Select3: FC<SelectProps> = ({value}: SelectProps) => {
     const [roomArr, setRoomArr] = useState([{value: 1, title: 'Room One'},{value: 2, title: 'Room Two'},{value: 3, title: 'Room Three'}]);
 
     // todo update data from api
-    const getData = (level:number) => {
+    const getData = (flag:number, title:string = '') => {
         const arr = [
             [{value: 1, title: 'Building One'},{value: 2, title: 'Building Two'},{value: 3, title: 'Building Three'}],
             [{value: 11, title: 'First Floor'},{value: 22, title: 'Second Floor'},{value: 33, title: 'Third Floor'}],
@@ -29,38 +29,52 @@ export const Select3: FC<SelectProps> = ({value}: SelectProps) => {
             [{value: 44, title: 'Forth Floor'},{value: 55, title: 'Fifth Floor'},{value: 66, title: 'Sixth Floor'}],
             [{value: 444, title: 'Room Four'},{value: 555, title: 'Room Five'},{value: 666, title: 'Room Six'}],
         ];
-        return arr[level];
+        return arr[flag];
     }
 
-    const onChange = async (value: number, level: number) => {
+    const onChange = async (value: number, flag: number) => {
         let valArr = [0,0,0];
         // If building is changed, clear room info and update level info
-        if (level === 0){
+        if (flag === 0){
             valArr = [value,0,0];
             setLevelArr(getData(4))
             setRoomArr([])
         }
         // If level is changed, update room info
-        if (level === 1){
+        if (flag === 1){
             valArr = [val[0],value,0];
             setRoomArr(getData(5))
         }
-        if (level === 2){
+        if (flag === 2){
             valArr = [val[0],val[1],value];
         }
         await setVal(valArr)
     }
 
+    const onSearch = async (flag:number, title: string) => {
+        switch (flag) {
+            case 0:
+                setBuildingArr(getData(flag, title));
+                break;
+            case 1:
+                setLevelArr(getData(flag, title));
+                break;
+            case 2:
+                setRoomArr(getData(flag, title));
+                break;
+        }
+    }
+
     return (
         <Container>
             <div>
-                <Select data={buildingArr} value={val[0]} onChange={(e) => {onChange(e, 0)}} placeholder={'Please choose building'} />
+                <Select data={buildingArr} value={val[0]} onChange={(e) => {onChange(e, 0)}} onSearch={(e) => {onSearch(0, e)}} placeholder={'Please choose building'} />
             </div>
             <div>
-                <Select data={levelArr} value={val[1]} onChange={(e) => {onChange(e, 1)}} placeholder={'Please choose level'} />
+                <Select data={levelArr} value={val[1]} onChange={(e) => {onChange(e, 1)}} onSearch={(e) => {onSearch(1, e)}} placeholder={'Please choose level'} />
             </div>
             <div>
-                <Select data={roomArr} value={val[2]} onChange={(e) => {onChange(e, 2)}} placeholder={'Please choose room'} />
+                <Select data={roomArr} value={val[2]} onChange={(e) => {onChange(e, 2)}} onSearch={(e) => {onSearch(2, e)}} placeholder={'Please choose room'} />
             </div>
         </Container>
     )
@@ -71,7 +85,7 @@ const Container = styled.div`
   justify-content: space-around;
 
   div {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 28px;
     width: 97%;
   }
