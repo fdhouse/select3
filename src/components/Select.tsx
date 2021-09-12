@@ -8,39 +8,31 @@ export interface DataEntity {
 
 export interface SelectProps {
     data?: DataEntity[];
-    value?: number;
-    placeholder?: string;
-    onChange?: (value:number)=>any;
-    onSearch?: (value:string)=>any;
+    value?: DataEntity;
+    onChange?: (value:DataEntity)=>any;
 }
 
-export const Select: FC<SelectProps> = ({data, value, placeholder, onChange, onSearch}: SelectProps) => {
-    const [val, setVal] = useState(value);
+export const Select: FC<SelectProps> = ({data, value, onChange}: SelectProps) => {
+    const [val, setVal] = useState<DataEntity>(value??{value:0, title:'全部'});
 
     useEffect(() => {
         if (value !== val){
-            setVal(value??0);
+            setVal(value??{value:0, title:'全部'});
         }
-    },[value]);
+    },[value, val]);
 
 
-    const onClick = (value: number) => {
+    const onClick = (value: DataEntity) => {
         setVal(value);
         onChange && onChange(value);
     }
 
-    const search = (value:string) => {
-        console.log(value)
-        onSearch && onSearch(value);
-    }
-
     return (
         <Container>
-            <div><input className={'search'} placeholder={placeholder} onChange={(e)=>{search(e.target.value)}}/></div>
             {
                 (data && data.length > 0) && data.map((item, index) => {
-                    return <div className={val === item.value ? 'selected' : ''} key={index} onClick={() => {
-                        onClick(item.value)
+                    return <div className={val.value === item.value ? 'selected' : ''} key={index} onClick={() => {
+                        onClick(item)
                     }}>{item.title}</div>
                 })
             }
@@ -55,23 +47,12 @@ const Container = styled.div`
   background: #FFF;
 
   div {
-    font-size: 18px;
     line-height: 28px;
     width: 100%;
+    color: RGB(153,153,153)
   }
 
   .selected {
-    background: #ccc;
-  }
-
-  .search {
-    width: calc(100% - 4px);
-    border: 1px solid #ccc;
-    line-height: 26px;
-    border-radius: 5px;
-  }
-
-  .search:focus {
-    border: 1px solid #ccc;
+    color: #000;
   }
 `;
